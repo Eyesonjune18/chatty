@@ -11,9 +11,19 @@ fn main() {
 
 fn start_sender() {
     std::thread::spawn(|| {
-        // Connect to the server at 192.168.137.191:9000
-        let mut stream = TcpStream::connect("192.168.137.191:9015").unwrap();
-        
+        fn connect() -> TcpStream {
+            loop {
+                // Connect to the server at 192.168.137.191:9015
+                match TcpStream::connect("192.168.137.191:9015") {
+                    Ok(stream) => return stream,
+                    Err(_) => continue,
+                }
+            }
+        }
+
+        // Wait for the receiver to open a socket
+        let mut stream = connect();
+
         loop {
             // Read a line from stdin
             let mut input = String::new();
