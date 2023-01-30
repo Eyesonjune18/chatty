@@ -9,7 +9,7 @@ fn main() {
 fn start_sender() {
     std::thread::spawn(|| {
         // Connect to the server at 192.168.137.191:9000
-        let mut stream = TcpStream::connect("192.168.137.191:9001").unwrap();
+        let mut stream = TcpStream::connect("192.168.137.191:9015").unwrap();
         
         loop {
             // Read a line from stdin
@@ -25,7 +25,7 @@ fn start_sender() {
 fn start_receiver() {
     std::thread::spawn(|| {
         // Open connections on port 9001
-        let listener = TcpListener::bind("192.168.137.102:9001").unwrap();
+        let listener = TcpListener::bind("192.168.137.102:9015").unwrap();
 
         // Accept a connection
         let (stream, _) = listener.accept().unwrap();
