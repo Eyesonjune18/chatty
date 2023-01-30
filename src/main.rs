@@ -4,6 +4,9 @@ use std::net::{TcpStream, TcpListener};
 fn main() {
     start_sender();
     start_receiver();
+
+    // Don't let the main thread exit
+    loop {}
 }
 
 fn start_sender() {
