@@ -57,7 +57,13 @@ fn start_receiver() {
             reader.read_line(&mut line).unwrap();
             
             if line.len() > 0 {
-                println!("RECV: {}", line);
+                // Clear the SEND prompt line
+                print!("\r\x1b[2K");
+                // Print the received message
+                print!("RECV: {}", line);
+                // Re-print the send prompt
+                print!("SEND: ");
+                io::stdout().flush().unwrap();
             } else {
                 println!("Connection closed.");
                 std::process::exit(0);
