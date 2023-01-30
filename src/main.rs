@@ -16,8 +16,11 @@ fn start_sender() {
                 // Connect to the server on port 9015
                 match TcpStream::connect("192.168.137.191:9015") {
                     Ok(stream) => return stream,
-                    Err(_) => continue,
+                    Err(_) => (),
                 }
+
+                // Sleep for 1 second before trying again
+                std::thread::sleep(std::time::Duration::from_secs(1));
             }
         }
 
