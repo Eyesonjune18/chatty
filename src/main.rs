@@ -13,7 +13,7 @@ fn start_sender() {
     std::thread::spawn(|| {
         fn connect() -> TcpStream {
             loop {
-                // Connect to the server at 192.168.137.191:9015
+                // Connect to the server on port 9015
                 match TcpStream::connect("192.168.137.191:9015") {
                     Ok(stream) => return stream,
                     Err(_) => continue,
@@ -21,10 +21,17 @@ fn start_sender() {
             }
         }
 
+        println!("Waiting for a connection...");
+
         // Wait for the receiver to open a socket
         let mut stream = connect();
 
+        println!("Connection successful. Type a message and press ENTER to send.");
+
         loop {
+            // Prompt the user for a message to send
+            print!("SEND: ");
+            io::stdout().flush().unwrap();
             // Read a line from stdin
             let mut input = String::new();
             io::stdin().read_line(&mut input).unwrap();
@@ -37,7 +44,7 @@ fn start_sender() {
 
 fn start_receiver() {
     std::thread::spawn(|| {
-        // Open connections on port 9001
+        // Open connections on port 9015
         let listener = TcpListener::bind("192.168.137.102:9015").unwrap();
 
         // Accept a connection
@@ -48,7 +55,13 @@ fn start_receiver() {
         loop {
             let mut line = String::new();
             reader.read_line(&mut line).unwrap();
-            println!("R: {}", line);
+            
+            if line.len() > 0 {
+                println!("RECV: {}", line);
+            } else {
+                println!("Connection closed.");
+                std::process::exit(0);
+            }
         }
     });
 }
